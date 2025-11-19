@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - MINSAL</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Logo_del_MINSAL_Chile.png/1200px-Logo_del_MINSAL_Chile.png" 
+         alt="Logo MINSAL" 
+         class="logo">
+
+    <div class="form-box">
+        <h1>Iniciar Sesión</h1>
+        
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
+
+        <div class="textbox">
+            <input type="text" id="username" placeholder="RUT o Correo" required>
+        </div>
+
+        <div class="textbox">
+            <input type="password" id="password" placeholder="Clave Única" required>
+        </div>
+
+        <div class="forgot-password">
+            <a href="#">¿Olvidaste tu Contraseña?</a>
+        </div>
+
+        <button class="btn-submit" id="btn-login">Ingresar</button>
+        <div class="loading" id="loading">Verificando credenciales...</div>
+
+        <p class="nav-link">
+            ¿No tienes una cuenta? <a href="registro.html">Regístrate aquí</a>
+        </p>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+
+        const btnLogin = document.getElementById('btn-login');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('error-message');
+        const successMessage = document.getElementById('success-message');
+
+        // Función para mostrar mensajes
+        function showMessage(element, message) {
+            element.textContent = message;
+            element.style.display = 'block';
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
+
+        // Función para ocultar todos los mensajes
+        function hideMessages() {
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+        }
+
+        // Permitir enter para submit
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
+
+        usernameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
+
+        // Manejador de login
+        btnLogin.addEventListener('click', handleLogin);
+
+        async function handleLogin() {
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+
+            // Validaciones
+            if (!username || !password) {
+                showMessage(errorMessage, 'Por favor completa todos los campos');
+                return;
+            }
+
+            // Deshabilitar botón y mostrar loading
+            btnLogin.disabled = true;
+            loading.style.display = 'block';
+            hideMessages();
+
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Guardar datos del usuario
+                    localStorage.setItem('usuario', JSON.stringify(data.usuario));
+                    
+                    showMessage(successMessage, 'Login exitoso! Redirigiendo...');
+                    
+                    // Redirigir después de 1 segundo
+                    setTimeout(() => {
+                        window.location.href = 'hub.html';
+                    }, 1000);
+                } else {
+                    showMessage(errorMessage, data.message || 'Credenciales incorrectas');
+                }
+            } catch (error) {
+                console.error('Error al conectar con el servidor:', error);
+                showMessage(errorMessage, 'Error al conectar con el servidor. Verifica que el backend esté corriendo.');
+            } finally {
+                btnLogin.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

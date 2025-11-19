@@ -1,0 +1,272 @@
+/* Estilos generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Gradiente para login */
+body.login-page {
+    background: linear-gradient(135deg, #667eea 0%, #e6e6e6 100%);
+}
+
+/* Gradiente para registro */
+body.registro-page {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+/* Logo */
+.logo {
+    width: 200px;
+    margin-bottom: 30px;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Contenedor principal */
+.form-box {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+}
+
+.registro-page .form-box {
+    max-width: 450px;
+}
+
+/* Título */
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+/* Inputs */
+.textbox {
+    margin-bottom: 20px;
+}
+
+.textbox label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.textbox input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.textbox input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Focus para login (morado) */
+.login-page .textbox input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Focus para registro (verde) */
+.registro-page .textbox input:focus {
+    border-color: #11998e;
+    box-shadow: 0 0 0 3px rgba(17, 153, 142, 0.1);
+}
+
+/* Link de contraseña olvidada */
+.forgot-password {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.forgot-password a {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.forgot-password a:hover {
+    color: #764ba2;
+}
+
+/* Botón de submit */
+.btn-submit {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-top: 10px;
+}
+
+/* Botón login (morado) */
+.login-page .btn-submit {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-page .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Botón registro (verde) */
+.registro-page .btn-submit {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.registro-page .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);
+}
+
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Links de navegación */
+.nav-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+    font-size: 14px;
+}
+
+.nav-link a {
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.login-page .nav-link a {
+    color: #667eea;
+}
+
+.login-page .nav-link a:hover {
+    color: #764ba2;
+}
+
+.registro-page .nav-link a {
+    color: #11998e;
+}
+
+.registro-page .nav-link a:hover {
+    color: #38ef7d;
+}
+
+/* Loading */
+.loading {
+    display: none;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.login-page .loading {
+    color: #667eea;
+}
+
+.registro-page .loading {
+    color: #11998e;
+}
+
+/* Mensajes */
+.error-message {
+    background: #fee;
+    color: #c33;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    display: none;
+    font-size: 14px;
+}
+
+.success-message {
+    background: #efe;
+    color: #3c3;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    display: none;
+    font-size: 14px;
+}
+
+/* Indicador de fuerza de contraseña */
+.password-requirements {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.password-strength {
+    height: 5px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.password-strength-bar {
+    height: 100%;
+    width: 0%;
+    transition: all 0.3s;
+}
+
+.weak { 
+    background: #ff4444; 
+    width: 33%; 
+}
+
+.medium { 
+    background: #ffaa00; 
+    width: 66%; 
+}
+
+.strong { 
+    background: #00C851; 
+    width: 100%; 
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .form-box {
+        padding: 30px 20px;
+    }
+    
+    h1 {
+        font-size: 24px;
+    }
+    
+    .logo {
+        width: 150px;
+    }
+}
