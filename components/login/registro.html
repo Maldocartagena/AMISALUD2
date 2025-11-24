@@ -17,6 +17,15 @@
         <div id="error-message" class="error-message"></div>
         <div id="success-message" class="success-message"></div>
 
+        <!-- Selector de tipo de usuario -->
+        <div class="textbox">
+            <label for="tipoUsuario">Tipo de Usuario *</label>
+            <select id="tipoUsuario" required>
+                <option value="paciente">Paciente</option>
+                <option value="medico">Médico</option>
+            </select>
+        </div>
+
         <div class="textbox">
             <label for="nombre">Nombre Completo *</label>
             <input type="text" id="nombre" placeholder="Juan Pérez González" required>
@@ -30,6 +39,80 @@
         <div class="textbox">
             <label for="correo">Correo Electrónico *</label>
             <input type="email" id="correo" placeholder="ejemplo@correo.com" required>
+        </div>
+
+        <div class="textbox">
+            <label for="telefono">Teléfono *</label>
+            <input type="tel" id="telefono" placeholder="+56912345678" required>
+        </div>
+
+        <!-- Campos adicionales para MÉDICOS (ocultos por defecto) -->
+        <div id="campos-medico" style="display: none;">
+            <div class="textbox">
+                <label for="especialidad">Especialidad *</label>
+                <select id="especialidad">
+                    <option value="">Selecciona una especialidad</option>
+                    <option value="Cardiología">Cardiología</option>
+                    <option value="Pediatría">Pediatría</option>
+                    <option value="Medicina General">Medicina General</option>
+                    <option value="Ginecología">Ginecología</option>
+                    <option value="Traumatología">Traumatología</option>
+                    <option value="Dermatología">Dermatología</option>
+                    <option value="Oftalmología">Oftalmología</option>
+                    <option value="Psiquiatría">Psiquiatría</option>
+                </select>
+            </div>
+
+            <div class="textbox">
+                <label for="registroMedico">Registro Médico (RUT Médico) *</label>
+                <input type="text" id="registroMedico" placeholder="RUT-MED-12345">
+            </div>
+
+            <div class="textbox">
+                <label for="centroSalud">Centro de Salud *</label>
+                <select id="centroSalud">
+                    <option value="">Selecciona un centro</option>
+                    <option value="centro_001">Centro de Salud Norte</option>
+                    <option value="centro_002">Centro de Salud Sur</option>
+                    <option value="centro_003">Centro de Salud Este</option>
+                    <option value="centro_004">Centro de Salud Oeste</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Campos adicionales para PACIENTES -->
+        <div id="campos-paciente">
+            <div class="textbox">
+                <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                <input type="date" id="fechaNacimiento">
+            </div>
+
+            <div class="textbox">
+                <label for="direccion">Dirección</label>
+                <input type="text" id="direccion" placeholder="Calle Falsa 123">
+            </div>
+
+            <div class="textbox">
+                <label for="region">Región</label>
+                <select id="region">
+                    <option value="">Selecciona una región</option>
+                    <option value="Metropolitana">Metropolitana</option>
+                    <option value="Valparaíso">Valparaíso</option>
+                    <option value="Biobío">Biobío</option>
+                    <option value="Araucanía">Araucanía</option>
+                    <option value="Los Lagos">Los Lagos</option>
+                </select>
+            </div>
+
+            <div class="textbox">
+                <label for="prevision">Previsión</label>
+                <select id="prevision">
+                    <option value="">Selecciona previsión</option>
+                    <option value="Fonasa">Fonasa</option>
+                    <option value="Isapre">Isapre</option>
+                    <option value="Particular">Particular</option>
+                </select>
+            </div>
         </div>
 
         <div class="textbox">
@@ -60,15 +143,49 @@
         const API_URL = 'http://localhost:3000/api';
 
         const btnRegistro = document.getElementById('btn-registro');
+        const tipoUsuarioSelect = document.getElementById('tipoUsuario');
         const nombreInput = document.getElementById('nombre');
         const rutInput = document.getElementById('rut');
         const correoInput = document.getElementById('correo');
+        const telefonoInput = document.getElementById('telefono');
         const contrasenaInput = document.getElementById('contrasena');
         const confirmarContrasenaInput = document.getElementById('confirmar-contrasena');
         const loading = document.getElementById('loading');
         const errorMessage = document.getElementById('error-message');
         const successMessage = document.getElementById('success-message');
         const passwordStrengthBar = document.getElementById('password-strength-bar');
+
+        // Campos específicos de médicos
+        const camposMedico = document.getElementById('campos-medico');
+        const especialidadSelect = document.getElementById('especialidad');
+        const registroMedicoInput = document.getElementById('registroMedico');
+        const centroSaludSelect = document.getElementById('centroSalud');
+
+        // Campos específicos de pacientes
+        const camposPaciente = document.getElementById('campos-paciente');
+        const fechaNacimientoInput = document.getElementById('fechaNacimiento');
+        const direccionInput = document.getElementById('direccion');
+        const regionSelect = document.getElementById('region');
+        const previsionSelect = document.getElementById('prevision');
+
+        // Mostrar/Ocultar campos según tipo de usuario
+        tipoUsuarioSelect.addEventListener('change', () => {
+            if (tipoUsuarioSelect.value === 'medico') {
+                camposMedico.style.display = 'block';
+                camposPaciente.style.display = 'none';
+                // Hacer campos de médico obligatorios
+                especialidadSelect.required = true;
+                registroMedicoInput.required = true;
+                centroSaludSelect.required = true;
+            } else {
+                camposMedico.style.display = 'none';
+                camposPaciente.style.display = 'block';
+                // Hacer campos de médico no obligatorios
+                especialidadSelect.required = false;
+                registroMedicoInput.required = false;
+                centroSaludSelect.required = false;
+            }
+        });
 
         // Función para mostrar mensajes
         function showMessage(element, message) {
@@ -110,19 +227,30 @@
             e.target.value = value;
         });
 
+        // Formatear teléfono
+        telefonoInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/[^0-9+]/g, '');
+            if (!value.startsWith('+56') && value.length > 0) {
+                value = '+56' + value;
+            }
+            e.target.value = value;
+        });
+
         // Manejador de registro
         btnRegistro.addEventListener('click', handleRegistro);
 
         async function handleRegistro() {
+            const tipoUsuario = tipoUsuarioSelect.value;
             const nombre = nombreInput.value.trim();
             const rut = rutInput.value.trim();
             const correo = correoInput.value.trim();
+            const telefono = telefonoInput.value.trim();
             const contrasena = contrasenaInput.value;
             const confirmarContrasena = confirmarContrasenaInput.value;
 
-            // Validaciones
-            if (!nombre || !rut || !correo || !contrasena || !confirmarContrasena) {
-                showMessage(errorMessage, 'Por favor completa todos los campos');
+            // Validaciones básicas
+            if (!nombre || !rut || !correo || !telefono || !contrasena || !confirmarContrasena) {
+                showMessage(errorMessage, 'Por favor completa todos los campos obligatorios');
                 return;
             }
 
@@ -143,23 +271,62 @@
                 return;
             }
 
+            // Preparar datos base
+            let datosRegistro = {
+                nombre,
+                rut,
+                correo,
+                telefono,
+                contrasena,
+                rol: tipoUsuario
+            };
+
+            // Agregar campos específicos según tipo de usuario
+            if (tipoUsuario === 'medico') {
+                const especialidad = especialidadSelect.value;
+                const registroMedico = registroMedicoInput.value.trim();
+                const centroSalud = centroSaludSelect.value;
+
+                if (!especialidad || !registroMedico || !centroSalud) {
+                    showMessage(errorMessage, 'Por favor completa todos los campos de médico');
+                    return;
+                }
+
+                datosRegistro = {
+                    ...datosRegistro,
+                    especialidad,
+                    registroMedico,
+                    centroSaludId: centroSalud,
+                    centroSaludNombre: centroSaludSelect.options[centroSaludSelect.selectedIndex].text
+                };
+            } else {
+                // Campos opcionales de paciente
+                const fechaNacimiento = fechaNacimientoInput.value;
+                const direccion = direccionInput.value.trim();
+                const region = regionSelect.value;
+                const prevision = previsionSelect.value;
+
+                if (fechaNacimiento) datosRegistro.fechaNacimiento = fechaNacimiento;
+                if (direccion) datosRegistro.direccion = direccion;
+                if (region) datosRegistro.region = region;
+                if (prevision) datosRegistro.prevision = prevision;
+            }
+
             // Deshabilitar botón y mostrar loading
             btnRegistro.disabled = true;
             loading.style.display = 'block';
             hideMessages();
 
             try {
-                const response = await fetch(`${API_URL}/registro`, {
+                // Usar endpoint diferente según tipo de usuario
+                const endpoint = tipoUsuario === 'medico' ? '/registro-medico' : '/registro';
+                
+                const response = await fetch(`${API_URL}${endpoint}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        nombre: nombre,
-                        rut: rut,
-                        correo: correo,
-                        contrasena: contrasena
-                    })
+                    body: JSON.stringify(datosRegistro)
                 });
 
                 const data = await response.json();
@@ -171,8 +338,20 @@
                     nombreInput.value = '';
                     rutInput.value = '';
                     correoInput.value = '';
+                    telefonoInput.value = '';
                     contrasenaInput.value = '';
                     confirmarContrasenaInput.value = '';
+                    
+                    if (tipoUsuario === 'medico') {
+                        especialidadSelect.value = '';
+                        registroMedicoInput.value = '';
+                        centroSaludSelect.value = '';
+                    } else {
+                        fechaNacimientoInput.value = '';
+                        direccionInput.value = '';
+                        regionSelect.value = '';
+                        previsionSelect.value = '';
+                    }
                     
                     // Redirigir después de 2 segundos
                     setTimeout(() => {
