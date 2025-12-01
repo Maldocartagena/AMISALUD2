@@ -3,6 +3,7 @@ import Landing from "./Components/Landing.js";
 import Login from "./Login/Login.js";
 import Dashboard from "./Components/Dashboard.js";
 import Registro from "./Login/Registro.js";
+import Agendamiento from "./Components/Agendamiento.js";
 
 export default function App() {
   const [page, setPage] = useState("landing");
@@ -33,10 +34,17 @@ export default function App() {
         })
       : null,
 
-    page === "dashboard"
+     page === "dashboard"
       ? React.createElement(Dashboard, {
           onLogout: handleLogout,
+          onNavigate: setPage,       // <-- AGREGADO
         })
-      : null
+      : null,
+      
+    page === "agendamiento"
+      ? React.createElement(Agendamiento, {
+           onGoToDashboard: () => setPage("dashboard"),
+    })
+  : null
   );
 }
